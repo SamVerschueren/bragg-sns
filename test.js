@@ -2,17 +2,14 @@ import test from 'ava';
 import objectAssign from 'object-assign';
 import m from './';
 
-const fixture1 = {req: {Records: []}};
-const fixture2 = {req: {Records: [{Sns: {TopicArn: 'foo'}}, {Sns: {TopicArn: 'bar'}}]}};
-const fixture3 = {req: {Records: [{Sns: {TopicArn: 'foo', Message: 'bar'}}]}};
-const fixture4 = {req: {Records: [{Sns: {TopicArn: 'foo', Message: 'foo'}}, {Sns: {TopicArn: 'foo', Message: 'bar'}}]}};
-const fixture5 = {req: {Records: [{Sns: {TopicArn: 'foo', Message: '{\"foo\":\"bar\"}'}}]}};
+import * as fixture1 from './fixtures/multi-source.json';
+import * as fixture2 from './fixtures/dynamodb-event.json';
+import * as fixture3 from './fixtures/event.json';
+import * as fixture4 from './fixtures/json-event.json';
 
 function fn(t, event, opts) {
-	const ctx = objectAssign({}, event, t.context.ctx);
-
+	const ctx = objectAssign({}, {req: event}, t.context.ctx);
 	m(opts)(ctx);
-
 	return ctx;
 }
 
@@ -26,21 +23,28 @@ test.beforeEach(t => {
 });
 
 test('error', t => {
-	t.throws(fn.bind(undefined, t, fixture1), '400 - Could not process SNS event');
-	t.throws(fn.bind(undefined, t, fixture2), '400 - Can not process different topics');
+	t.throws(fn.bind(undefined, t, fixture1), '400 - Can not process different topics');
+});
+
+test('do nothing if it\'s not a SNS event', t => {
+	const result = fn(t, fixture2);
+	t.notOk(result.request.body);
+	t.notOk(result.path);
+	t.notOk(result.method);
 });
 
 test('result', t => {
-	t.same(fn(t, fixture3).request, {body: 'bar'});
-	t.same(fn(t, fixture4).request, {body: ['foo', 'bar']});
-	t.same(fn(t, fixture5).request, {body: {foo: 'bar'}});
+	const result = fn(t, fixture3);
+	t.is(result.path, 'sns:EXAMPLE');
+	t.is(result.method, 'post');
+	t.same(result.request.body, ['Hello from SNS!']);
 });
 
-test('path', t => {
-	t.same(fn(t, fixture3).path, 'sns:foo');
-	t.same(fn(t, fixture3, {foo: 'bar'}).path, 'sns:bar');
+test('json result', t => {
+	const result = fn(t, fixture4);
+	t.same(result.request.body, [{foo: 'bar'}, 'Foo Bar']);
 });
 
-test('method', t => {
-	t.same(fn(t, fixture3).method, 'post');
+test('path mapping', t => {
+	t.is(fn(t, fixture3, {EXAMPLE: 'foo'}).path, 'sns:foo');
 });

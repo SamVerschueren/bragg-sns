@@ -3,15 +3,11 @@ module.exports = function (opts) {
 	opts = opts || {};
 
 	return function (ctx) {
-		if (!ctx.path && ctx.req.Records) {
-			if (ctx.req.Records.length === 0) {
-				ctx.throw(400, 'Could not process SNS event');
-			}
-
-			var record = ctx.req.Records[0];
-			var topic = record.Sns.TopicArn.split(':').pop();
+		if (!ctx.path && ctx.req.Records && ctx.req.Records.length > 0 && ctx.req.Records[0].EventSource === 'aws:sns') {
+			var first = ctx.req.Records[0];
+			var topic = first.Sns.TopicArn.split(':').pop();
 			var messages = ctx.req.Records.map(function (record) {
-				if (topic !== record.Sns.TopicArn.split(':').pop()) {
+				if (first.Sns.TopicArn !== record.Sns.TopicArn) {
 					ctx.throw(400, 'Can not process different topics');
 				}
 
@@ -22,8 +18,7 @@ module.exports = function (opts) {
 				}
 			});
 
-			ctx.request.body = messages.length > 1 ? messages : messages[0];
-
+			ctx.request.body = messages;
 			Object.defineProperty(ctx, 'path', {enumerable: true, value: 'sns:' + (opts[topic] || topic)});
 			Object.defineProperty(ctx, 'method', {enumerable: true, value: 'post'});
 		}

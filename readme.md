@@ -18,18 +18,19 @@ var app = require('bragg')();
 var router = require('bragg-router')();
 var sns = require('bragg-sns');
 
+// Listen for events in the `TopicName` and `TopicNameDev` topic
 router.post('sns:TopicName', function (ctx) {
     ctx.body = ctx.request.body;
 });
 
-app.use(sns());
+app.use(sns({TopicNameDev: 'TopicName'}));
 app.use(router.routes());
 
 exports.handler = app.listen();
 ```
 
 The `sns:` prefix is attached by this module and is followed by the name of the topic that originated the event. The message of the event is
-provided in the `body` property of the `request` object. The library maps all the SNS events to `post` requests.
+provided in the `body` property of the `request` object.
 
 
 ## API
@@ -40,7 +41,7 @@ provided in the `body` property of the `request` object. The library maps all th
 
 Type: `object`
 
-Rename the original topic name. For example, if you want to rename `TopicName` to `Foo` you have to provide `{TopicName: 'foo'}`.
+Map a topic name to another name.
 
 
 ## License
