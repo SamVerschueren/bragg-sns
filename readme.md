@@ -14,12 +14,12 @@ $ npm install --save bragg-sns
 ## Usage
 
 ```js
-var app = require('bragg')();
-var router = require('bragg-router')();
-var sns = require('bragg-sns');
+const app = require('bragg')();
+const router = require('bragg-router')();
+const sns = require('bragg-sns');
 
 // Listen for events in the `TopicName` and `TopicNameDev` topic
-router.post('sns:TopicName', function (ctx) {
+router.post('sns:TopicName', ctx => {
     ctx.body = ctx.request.body;
 });
 

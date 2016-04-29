@@ -10,7 +10,7 @@
     "url": "github.com/SamVerschueren"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">4"
   },
   "scripts": {
     "test": "xo && ava"
@@ -30,7 +30,9 @@
   "dependencies": {},
   "devDependencies": {
     "ava": "*",
-    "object-assign": "^4.0.1",
     "xo": "*"
+  },
+  "xo": {
+    "esnext": true
   }
 }
