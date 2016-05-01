@@ -1,6 +1,6 @@
 {
   "name": "bragg-sns",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SNS middleware for bragg",
   "license": "MIT",
   "repository": "SamVerschueren/bragg-sns",
