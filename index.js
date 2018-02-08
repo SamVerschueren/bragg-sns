@@ -18,8 +18,14 @@ module.exports = opts => {
 				}
 			});
 
+			let snsPath = opts[topic] || topic;
+
+			if (typeof opts === 'function') {
+				snsPath = opts(topic);
+			}
+
 			ctx.request.body = messages;
-			Object.defineProperty(ctx, 'path', {enumerable: true, value: `sns:${(opts[topic] || topic)}`});
+			Object.defineProperty(ctx, 'path', {enumerable: true, value: `sns:${snsPath}`});
 			Object.defineProperty(ctx, 'method', {enumerable: true, value: 'post'});
 		}
 	};

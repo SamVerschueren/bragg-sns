@@ -48,3 +48,7 @@ test('json result', t => {
 test('path mapping', t => {
 	t.is(fn(t, fixture3, {EXAMPLE: 'foo'}).path, 'sns:foo');
 });
+
+test('path mapping with function', t => {
+	t.is(fn(t, fixture3, topic => `${topic}_test`).path, 'sns:EXAMPLE_test');
+});
