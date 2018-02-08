@@ -1,9 +1,11 @@
 import test from 'ava';
-import * as fixture1 from './fixtures/multi-source.json';
-import * as fixture2 from './fixtures/dynamodb-event.json';
-import * as fixture3 from './fixtures/event.json';
-import * as fixture4 from './fixtures/json-event.json';
+import * as loadJsonFile from 'load-json-file';
 import m from './';
+
+const fixture1 = loadJsonFile.sync('./fixtures/multi-source.json');
+const fixture2 = loadJsonFile.sync('./fixtures/dynamodb-event.json');
+const fixture3 = loadJsonFile.sync('./fixtures/event.json');
+const fixture4 = loadJsonFile.sync('./fixtures/json-event.json');
 
 function fn(t, event, opts) {
 	const ctx = Object.assign({}, {req: event}, t.context.ctx);
