@@ -13,7 +13,7 @@ module.exports = opts => {
 
 				try {
 					return JSON.parse(record.Sns.Message);
-				} catch (err) {
+				} catch (error) {
 					return record.Sns.Message;
 				}
 			});
