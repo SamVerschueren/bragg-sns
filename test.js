@@ -1,6 +1,6 @@
 import test from 'ava';
 import * as loadJsonFile from 'load-json-file';
-import m from './';
+import m from '.';
 
 const fixture1 = loadJsonFile.sync('./fixtures/multi-source.json');
 const fixture2 = loadJsonFile.sync('./fixtures/dynamodb-event.json');
