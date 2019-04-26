@@ -37,12 +37,45 @@ test('result', t => {
 	const result = fn(t, fixture3);
 	t.is(result.path, 'sns:EXAMPLE');
 	t.is(result.method, 'post');
-	t.deepEqual(result.request.body, ['Hello from SNS!']);
+	t.deepEqual(result.request.body, [
+		{
+			message: 'Hello from SNS!',
+			attributes: {
+				Test: 'TestString',
+				TestBinary: 'TestBinary'
+			}
+		}
+	]);
 });
 
 test('json result', t => {
 	const result = fn(t, fixture4);
-	t.deepEqual(result.request.body, [{foo: 'bar'}, 'Foo Bar']);
+	t.deepEqual(result.request.body, [
+		{
+			message: {
+				foo: 'bar'
+			},
+			attributes: {
+				Test: 'TestString',
+				TestBinary: 'TestBinary'
+			}
+		},
+		{
+			message: 'Foo Bar',
+			attributes: {
+				TestString: 'TestString',
+				TestStringArray: ['TestStringArray'],
+				TestNumber: 0,
+				TestNumberArray: [0],
+				TestBoolean: true,
+				TestBooleanArray: [true],
+				TestBinary: 'TestBinary'
+			}
+		},
+		{
+			message: 'Message without attributes'
+		}
+	]);
 });
 
 test('path mapping', t => {

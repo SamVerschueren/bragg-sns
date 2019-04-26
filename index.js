@@ -1,4 +1,25 @@
 'use strict';
+
+const parseMessageAttributes = input => {
+	const result = {};
+
+	for (const key of Object.keys(input)) {
+		const value = input[key];
+
+		let resultValue;
+
+		try {
+			resultValue = JSON.parse(value.Value);
+		} catch (error) {
+			resultValue = value.Value;
+		}
+
+		result[key] = resultValue;
+	}
+
+	return result;
+};
+
 module.exports = opts => {
 	opts = opts || {};
 
@@ -11,11 +32,19 @@ module.exports = opts => {
 					ctx.throw(400, 'Can not process different topics');
 				}
 
+				let message;
+
 				try {
-					return JSON.parse(record.Sns.Message);
+					message = JSON.parse(record.Sns.Message);
 				} catch (error) {
-					return record.Sns.Message;
+					message = record.Sns.Message;
 				}
+
+				return Object.assign(
+					{},
+					{message},
+					record.Sns.MessageAttributes ? {attributes: parseMessageAttributes(record.Sns.MessageAttributes)} : {}
+				);
 			});
 
 			let snsPath = opts[topic] || topic;

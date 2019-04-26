@@ -39,15 +39,52 @@
 				"MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
 				"Message": "Foo Bar",
 				"MessageAttributes": {
-					"Test": {
+					"TestString": {
 						"Type": "String",
 						"Value": "TestString"
+					},
+					"TestStringArray": {
+						"Type": "String",
+						"Value": "[\"TestStringArray\"]"
+					},
+					"TestNumber": {
+						"Type": "String",
+						"Value": "0"
+					},
+					"TestNumberArray": {
+						"Type": "String",
+						"Value": "[0]"
+					},
+					"TestBoolean": {
+						"Type": "String",
+						"Value": "true"
+					},
+					"TestBooleanArray": {
+						"Type": "String",
+						"Value": "[true]"
 					},
 					"TestBinary": {
 						"Type": "Binary",
 						"Value": "TestBinary"
 					}
 				},
+				"Type": "Notification",
+				"UnsubscribeUrl": "EXAMPLE",
+				"TopicArn": "arn:aws:sns:EXAMPLE",
+				"Subject": "TestInvoke"
+			}
+		},
+		{
+			"EventVersion": "1.0",
+			"EventSubscriptionArn": "arn:aws:sns:EXAMPLE",
+			"EventSource": "aws:sns",
+			"Sns": {
+				"SignatureVersion": "1",
+				"Timestamp": "1970-01-01T00:00:00.000Z",
+				"Signature": "EXAMPLE",
+				"SigningCertUrl": "EXAMPLE",
+				"MessageId": "95df01b4-ee98-5cb9-9903-4c221d41eb5e",
+				"Message": "Message without attributes",
 				"Type": "Notification",
 				"UnsubscribeUrl": "EXAMPLE",
 				"TopicArn": "arn:aws:sns:EXAMPLE",
